@@ -1,0 +1,47 @@
+---
+#---------------Ansible EC2 Creation----------------
+- name: Create a new Demo EC2 instance
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+      region: ap-south-1
+      instance_type: t2.micro
+      ami: ami-0aa4317636e016115  # Redhat
+      keypair: AwsDevopsDemo # pem file name
+
+  tasks:
+
+    - name: Create an ec2 instance
+      ec2:
+         key_name: "{{ keypair }}"
+         aws_access_key: "{{ access_key }}"
+         aws_secret_key: "{{ secret_key }}"
+         group: mylinuxserver2  # security group name
+         instance_type: "{{ instance_type}}"
+         image: "{{ ami }}"
+         wait: true
+         region: "{{ region }}"
+         count: 1  # default
+         count_tag:
+            Name: "ansible_ec2"
+         instance_tags:
+            Name: "ansible_ec2"
+         vpc_subnet_id: "subnet-7668371e"
+         assign_public_ip: yes
+      register: ec2
+
+    - name: Debug Ec2 creation
+      debug: var=ec2
+
+    - name: Set authorized key taken from file
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+      register: auth_file
+
+    - name: debug auth file  
+      debug: var=auth_file
+... 
+#boto required

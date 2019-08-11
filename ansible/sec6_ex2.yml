@@ -1,0 +1,17 @@
+---
+-
+  name: Am in an Adult or a Child
+  hosts: localhost
+  vars:
+    age: 25
+  tasks:
+    - name: 'we are debugging'
+      debug: msg='{{ age }}'
+    - command: echo "I am a Child"
+      when: age < 18
+    - debug: msg='my age is {{ age }}'
+
+    -
+      command: echo "I am an Adult"
+      when: age >= 18
+    - debug: msg='he is adult '

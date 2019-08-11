@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  vars:
+    list1: ['Template iterate','Template loop','Template item']
+  tasks:
+    - name: Ansible template loop example.
+      template:
+        src: templates_for_loop.j2
+        dest: /opt/devops/ansible/output-ansible-jinja-loop.txt
+        mode: 0777
